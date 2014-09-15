@@ -53,8 +53,8 @@ var pieChartConfig = function(data) {
         if(!isInitialized) {
             nv.addGraph(function() {
                 var chart = nv.models.pieChart()
-                  .x(function(d) { return d.label })
-                  .y(function(d) { return d.value })
+                  .x(function(d) { return d.label; })
+                  .y(function(d) { return d.value; })
                   .showLabels(true);
 
                 d3.select(element)
@@ -77,7 +77,7 @@ var view = function(ctrl) {
             m('a[href=' + urls.userUrl(ctrl.userName) + ']', {config: m.route}, 'back'),
             content
         ]);
-    }
+    };
 
     if(languages.error()) {
         return wrapper(m('div', languages.error()));
@@ -117,7 +117,7 @@ var view = function(ctrl) {
             m('a[href=' + urls.homeUrl() + ']', {config: m.route}, 'back'),
             content
         ]);
-    }
+    };
 
     if(repositories.error()) {
         return wrapper(m('div', repositories.error()));
@@ -167,7 +167,7 @@ var controller = function() {
 
     this.selectUser = function() {
         m.route(urls.userUrl(this.user()));
-    }
+    };
 };
 
 var view = function(ctrl) {
@@ -199,7 +199,7 @@ module.exports = {
     repoLanguagesUrl: function(userName, repoName) {
         return base + '/repos/' + userName + '/' + repoName + '/languages';
     }
-}
+};
 
 },{}],6:[function(require,module,exports){
 var base = '';
@@ -214,14 +214,14 @@ module.exports = {
     repoUrl: function(userName, repoName) {
         return base + '/' + userName + '/' + repoName;
     }
-}
+};
 
 },{}],7:[function(require,module,exports){
 var pages = {
     home: require('./pages/home'),
     user: require('./pages/user'),
-    repo: require('./pages/repo'),
-}
+    repo: require('./pages/repo')
+};
 
 m.route(document.getElementById('main'), '/', {
     '/': pages.home,
@@ -232,8 +232,8 @@ m.route(document.getElementById('main'), '/', {
 },{"./pages/home":9,"./pages/repo":10,"./pages/user":11}],8:[function(require,module,exports){
 var requestWithFeedback = function(args, prop) {
     var nonJsonErrors = function(xhr) {
-        return xhr.status > 200 ? JSON.stringify(xhr.responseText) : xhr.responseText
-    }
+        return xhr.status > 200 ? JSON.stringify(xhr.responseText) : xhr.responseText;
+    };
     var error = prop ? prop.error : m.prop();
     var data = prop ? prop.data : m.prop();
     var completed = prop ? prop.ready : m.prop();
@@ -243,33 +243,33 @@ var requestWithFeedback = function(args, prop) {
 
     var complete = function(d) {
         data(d);
-        completed(true)
-    }
+        completed(true);
+    };
     var fail = function(d) {
         error(d);
         m.redraw();
-    }
-    args.background = true
-    args.extract = nonJsonErrors
+    };
+    args.background = true;
+    args.extract = nonJsonErrors;
     args.config = function(xhr) {
-        xhr.timeout = 4000
+        xhr.timeout = 4000;
         xhr.ontimeout = function() {
-            complete()
+            complete();
             error('timeout');
-            m.redraw()
-        }
+            m.redraw();
+        };
         if(args.xhrConfig) {
             args.xhrConfig(xhr);
         }
-    }
+    };
     var done = complete;
     m.request(args).then(done, fail).then(m.redraw);
     return prop || {
         error: error,
         data: data,
         ready: completed
-    }
-}
+    };
+};
 
 module.exports = requestWithFeedback;
 
